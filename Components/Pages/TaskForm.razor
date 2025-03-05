@@ -1,0 +1,27 @@
+﻿@page "/addtask"
+@inject BlazorTaskManager.Data.ApplicationDbContext Db
+@inject NavigationManager Navigation
+@using BlazorTaskManager.Components.Models
+
+<h3>Dodaj nowe zadanie</h3>
+
+<div>
+    <label>Tytuł:</label>
+    <input @bind="newTask.Title" class="form-control" />
+</div>
+
+<button class="btn btn-success mt-2" @onclick="AddTask">Dodaj</button>
+
+@code {
+    private TaskItem newTask = new();
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTask.Title))
+        {
+            Db.Tasks.Add(newTask);
+            Db.SaveChanges();
+            Navigation.NavigateTo("/");
+        }
+    }
+}
