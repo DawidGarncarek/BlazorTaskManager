@@ -1,7 +1,10 @@
 ﻿@page "/addtask"
-@inject BlazorTaskManager.Data.ApplicationDbContext Db
+@inject TaskContext TaskContext
 @inject NavigationManager Navigation
-@using BlazorTaskManager.Models
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using BlazorTaskManager.Data
+@using BlazorTaskManager.Models;
+@using BlazorTaskManager.Models.Task;
 
 <h3>Dodaj nowe zadanie</h3>
 
@@ -19,8 +22,8 @@
     {
         if (!string.IsNullOrWhiteSpace(newTask.Title))
         {
-            Db.Tasks.Add(newTask);
-            Db.SaveChanges();
+            TaskContext.Tasks.Add(newTask);
+            TaskContext.SaveChanges();
             Navigation.NavigateTo("/");
         }
     }

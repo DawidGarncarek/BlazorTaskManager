@@ -1,8 +1,10 @@
 ﻿@page "/"
-@inject BlazorTaskManager.Data.ApplicationDbContext Db
+@inject TaskContext TaskContext
 @inject NavigationManager Navigation
-@using BlazorTaskManager.Models
-
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using BlazorTaskManager.Data
+@using BlazorTaskManager.Models;
+@using BlazorTaskManager.Models.Task;
 
 <h3>Lista zadań</h3>
 
@@ -37,23 +39,23 @@
 
     protected override void OnInitialized()
     {
-        tasks = Db.Tasks.ToList();
+        tasks = TaskContext.Tasks.ToList();
     }
 
     private void ToggleCompletion(TaskItem task)
     {
         task.IsCompleted = !task.IsCompleted;
-        Db.SaveChanges();
+        TaskContext.SaveChanges();
     }
 
     private void DeleteTask(int id)
     {
-        var task = Db.Tasks.Find(id);
+        var task = TaskContext.Tasks.Find(id);
         if (task != null)
         {
-            Db.Tasks.Remove(task);
-            Db.SaveChanges();
-            tasks = Db.Tasks.ToList();
+            TaskContext.Tasks.Remove(task);
+            TaskContext.SaveChanges();
+            tasks = TaskContext.Tasks.ToList();
         }
     }
 
