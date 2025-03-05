@@ -34,6 +34,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Tools
 dotnet add package CsvHelper
 dotnet add package MailKit
 ```
+oraz instalacja EF Core Power Tools
 
 ## 🚀 Instalacja i uruchomienie
 🔹 1️⃣ Skopiuj projekt
