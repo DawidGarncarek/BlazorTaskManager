@@ -1,4 +1,4 @@
-using BlazorTaskManager.Components.Models;
+using BlazorTaskManager.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
