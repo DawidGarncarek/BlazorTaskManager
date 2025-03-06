@@ -6,33 +6,36 @@
 @using BlazorTaskManager.Models;
 @using BlazorTaskManager.Models.Task;
 
-<h3>Lista zadań</h3>
+<div class="container">
+    <h3 class="text-center mb-4">📋 Lista zadań</h3>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Opis</th>
-            <th>Ukończone</th>
-            <th>Akcje</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var task in tasks)
-        {
+    <table class="table table-striped">
+        <thead class="table-dark">
             <tr>
-                <td>@task.Title</td>
-                <td>
-                    <input type="checkbox" checked="@task.IsCompleted" @onchange="() => ToggleCompletion(task)" />
-                </td>
-                <td>
-                    <button @onclick="() => DeleteTask(task.Id)" class="btn btn-danger">Usuń</button>
-                </td>
+                <th>Opis</th>
+                <th class="text-center">Ukończone</th>
+                <th class="text-center">Akcje</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var task in tasks)
+            {
+                <tr>
+                    <td>@task.Title</td>
+                    <td class="text-center">
+                        <input type="checkbox" checked="@task.IsCompleted" class="form-check-input"
+                               @onchange="() => ToggleCompletion(task)" />
+                    </td>
+                    <td class="text-center">
+                        <button @onclick="() => DeleteTask(task.Id)" class="btn btn-sm btn-danger">❌ Usuń</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
-<button class="btn btn-primary" @onclick="NavigateToAddTask">Dodaj zadanie</button>
+    <button class="btn btn-primary w-100 mt-3" @onclick="NavigateToAddTask">➕ Dodaj zadanie</button>
+</div>
 
 @code {
     private List<TaskItem> tasks = new();

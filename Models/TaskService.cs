@@ -15,25 +15,36 @@ namespace BlazorTaskManager.Models
             _context = context;
         }
 
-        //public async Task SendMessageAsync(string messageText, string userName)
-        //{
-        //    var newMessage = new UserChatMessages
-        //    {
-        //        MessageText = messageText,
-        //        Date = DateTime.Now,
-        //        UserName = userName
-        //    };
+        // Pobranie wszystkich zadań
+        public async Task<List<TaskItem>> GetTasksAsync()
+        {
+            return await _context.Tasks.ToListAsync();
+        }
 
-        //    _context.UserChatMessages.Add(newMessage);
-        //    await _context.SaveChangesAsync();
-        //}
+        // Dodanie zadania
+        public async Task AddTaskAsync(TaskItem task)
+        {
+            _context.Tasks.Add(task);
+            await _context.SaveChangesAsync();
+        }
 
-        //public async Task<List<UserChatMessages>> GetMessagesAsync()
-        //{
-        //    return await _context.UserChatMessages
-        //        .OrderByDescending(m => m.Date)
-        //        .ToListAsync();
-        //}
+        // Usunięcie zadania
+        public async Task DeleteTaskAsync(int id)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+            if (task != null)
+            {
+                _context.Tasks.Remove(task);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        // Aktualizacja statusu zadania
+        public async Task ToggleCompletionAsync(TaskItem task)
+        {
+            task.IsCompleted = !task.IsCompleted;
+            await _context.SaveChangesAsync();
+        }
 
     }
 }
