@@ -5,19 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorTaskManager.Models.Task
 {
-    public class TaskContext : IdentityDbContext<ApplicationUser>
+    public partial class TaskContext : DbContext
     {
         public TaskContext(DbContextOptions<TaskContext> options)
             : base(options)
         {
         }
 
-        public DbSet<TaskItem> Tasks { get; set; }
+        public virtual DbSet<TaskItem> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<TaskItem>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -31,6 +29,8 @@ namespace BlazorTaskManager.Models.Task
                     .HasMaxLength(200);
                 entity.Property(e => e.UserName).HasMaxLength(50);
             });
+            OnModelCreatingPartial(modelBuilder);
         }
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }
