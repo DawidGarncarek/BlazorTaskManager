@@ -2,7 +2,7 @@ using BlazorTaskManager.Components;
 using BlazorTaskManager.Components.Account;
 using BlazorTaskManager.Data;
 using BlazorTaskManager.Models;
-using BlazorTaskManager.Models.Task;
+using BlazorTaskManager.Models.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

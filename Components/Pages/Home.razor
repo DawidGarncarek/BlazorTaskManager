@@ -1,69 +1,85 @@
 ﻿@page "/"
-@inject TaskContext TaskContext
-@inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject TaskService TaskService
 @using BlazorTaskManager.Data
 @using BlazorTaskManager.Models;
-@using BlazorTaskManager.Models.Task;
+@using BlazorTaskManager.Models.Tasks;
 
-<div class="container">
-    <h3 class="text-center mb-4">📋 Lista zadań</h3>
+<AuthorizeView>
+    <Authorized>
+        <div class="container">
+            <h3 class="text-center mb-4">📋 Lista zadań</h3>
 
-    <table class="table table-striped">
-        <thead class="table-dark">
-            <tr>
-                <th>Opis</th>
-                <th class="text-center">Ukończone</th>
-                <th class="text-center">Akcje</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var task in tasks)
-            {
-                <tr>
-                    <td>@task.Title</td>
-                    <td class="text-center">
-                        <input type="checkbox" checked="@task.IsCompleted" class="form-check-input"
-                               @onchange="() => ToggleCompletion(task)" />
-                    </td>
-                    <td class="text-center">
-                        <button @onclick="() => DeleteTask(task.Id)" class="btn btn-sm btn-danger">❌ Usuń</button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+            <div class="mb-3">
+                <TaskForm />
+            </div>
 
-    <button class="btn btn-primary w-100 mt-3" @onclick="NavigateToAddTask">➕ Dodaj zadanie</button>
-</div>
+            <table class="table table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Opis</th>
+                        <th class="text-center">Ukończone</th>
+                        <th class="text-center">Akcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var task in tasks)
+                    {
+                        <tr>
+                            <td>@task.Title</td>
+                            <td class="text-center">
+                                <input type="checkbox" checked="@task.IsCompleted" class="form-check-input"
+                                       @onchange="() => ToggleCompletion(task)" />
+                            </td>
+                            <td class="text-center">
+                                <button @onclick="() => DeleteTask(task.Id)" class="btn btn-sm btn-danger">❌ Usuń</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p class="text-center text-danger">Musisz być zalogowany, aby zobaczyć listę zadań.</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     private List<TaskItem> tasks = new();
+    private string newTaskTitle = ""; 
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        tasks = TaskContext.Tasks.ToList();
+        tasks = await TaskService.GetTasksAsync();
     }
 
-    private void ToggleCompletion(TaskItem task)
+    private async Task AddTask()
     {
-        task.IsCompleted = !task.IsCompleted;
-        TaskContext.SaveChanges();
-    }
-
-    private void DeleteTask(int id)
-    {
-        var task = TaskContext.Tasks.Find(id);
-        if (task != null)
+        if (!string.IsNullOrWhiteSpace(newTaskTitle))
         {
-            TaskContext.Tasks.Remove(task);
-            TaskContext.SaveChanges();
-            tasks = TaskContext.Tasks.ToList();
+            var newTask = new TaskItem
+                {
+                    Title = newTaskTitle,
+                    IsCompleted = false
+                };
+
+            await TaskService.AddTaskAsync(newTask);
+            tasks = await TaskService.GetTasksAsync();
+            newTaskTitle = ""; 
         }
     }
 
-    private void NavigateToAddTask()
+    private async Task ToggleCompletion(TaskItem task)
     {
-        Navigation.NavigateTo("/addtask");
+        task.IsCompleted = !task.IsCompleted;
+        await TaskService.UpdateTaskAsync(task);
+        tasks = await TaskService.GetTasksAsync();
+    }
+
+    private async Task DeleteTask(int id)
+    {
+        await TaskService.DeleteTaskAsync(id);
+        tasks = await TaskService.GetTasksAsync();
     }
 }

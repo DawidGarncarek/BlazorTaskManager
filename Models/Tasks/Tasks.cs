@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BlazorTaskManager.Models.Task;
+namespace BlazorTaskManager.Models.Tasks;
 
 public partial class TaskItem
 {

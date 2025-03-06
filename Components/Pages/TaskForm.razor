@@ -1,37 +1,28 @@
 ﻿@page "/addtask"
-@inject TaskContext TaskContext
-@inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject TaskService TaskService
 @using BlazorTaskManager.Data
 @using BlazorTaskManager.Models;
-@using BlazorTaskManager.Models.Task;
+@using BlazorTaskManager.Models.Tasks;
 
 <div class="container">
-    <h3 class="text-center mb-4">✏️ Dodaj nowe zadanie</h3>
+    <h3 class="text-center mb-4">➕ Dodaj nowe zadanie</h3>
 
     <div class="input-group">
         <input @bind="newTask.Title" class="form-control" placeholder="Wpisz nazwę zadania..." />
         <button class="btn btn-success" @onclick="AddTask">✔️ Dodaj</button>
     </div>
 
-    <button class="btn btn-secondary mt-3 w-100" @onclick="NavigateBack">⬅️ Powrót</button>
 </div>
 
 @code {
     private TaskItem newTask = new();
 
-    private void AddTask()
+    private async Task AddTask()
     {
         if (!string.IsNullOrWhiteSpace(newTask.Title))
         {
-            TaskContext.Tasks.Add(newTask);
-            TaskContext.SaveChanges();
-            Navigation.NavigateTo("/");
+            await TaskService.AddTaskAsync(newTask);
         }
-    }
-
-    private void NavigateBack()
-    {
-        Navigation.NavigateTo("/");
     }
 }

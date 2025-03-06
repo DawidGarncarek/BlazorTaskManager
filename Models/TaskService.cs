@@ -1,5 +1,5 @@
 ﻿using BlazorTaskManager.Components.Pages;
-using BlazorTaskManager.Models.Task;
+using BlazorTaskManager.Models.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,20 +15,23 @@ namespace BlazorTaskManager.Models
             _context = context;
         }
 
-        // Pobranie wszystkich zadań
         public async Task<List<TaskItem>> GetTasksAsync()
         {
             return await _context.Tasks.ToListAsync();
         }
 
-        // Dodanie zadania
         public async Task AddTaskAsync(TaskItem task)
         {
             _context.Tasks.Add(task);
             await _context.SaveChangesAsync();
         }
 
-        // Usunięcie zadania
+        public async Task UpdateTaskAsync(TaskItem task)
+        {
+            _context.Tasks.Update(task);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteTaskAsync(int id)
         {
             var task = await _context.Tasks.FindAsync(id);
@@ -39,7 +42,6 @@ namespace BlazorTaskManager.Models
             }
         }
 
-        // Aktualizacja statusu zadania
         public async Task ToggleCompletionAsync(TaskItem task)
         {
             task.IsCompleted = !task.IsCompleted;

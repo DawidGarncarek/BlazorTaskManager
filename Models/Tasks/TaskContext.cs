@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazorTaskManager.Models.Task
+namespace BlazorTaskManager.Models.Tasks
 {
     public partial class TaskContext : DbContext
     {
