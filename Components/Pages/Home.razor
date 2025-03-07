@@ -11,7 +11,7 @@
             <h3 class="text-center mb-4">📋 Lista zadań</h3>
 
             <div class="mb-3">
-                <TaskForm />
+                <TaskForm OnTaskAdded="RefreshTaskList" />
             </div>
 
             <table class="table table-striped">
@@ -46,40 +46,41 @@
 </AuthorizeView>
 
 @code {
-    private List<TaskItem> tasks = new();
-    private string newTaskTitle = ""; 
+    List<TaskItem> tasks = new List<TaskItem>();
+    private string userName = ""; 
 
     protected override async Task OnInitializedAsync()
     {
-        tasks = await TaskService.GetTasksAsync();
-    }
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-    private async Task AddTask()
-    {
-        if (!string.IsNullOrWhiteSpace(newTaskTitle))
+        if (user.Identity.IsAuthenticated)
         {
-            var newTask = new TaskItem
-                {
-                    Title = newTaskTitle,
-                    IsCompleted = false
-                };
-
-            await TaskService.AddTaskAsync(newTask);
-            tasks = await TaskService.GetTasksAsync();
-            newTaskTitle = ""; 
+            userName = user.Identity.Name;
+            await RefreshTaskList();
         }
     }
 
-    private async Task ToggleCompletion(TaskItem task)
+    private async Task RefreshTaskList()
+    {
+        Console.WriteLine($"Odświeżam listę zadań dla: {userName}");
+        await InvokeAsync(async () =>
+        {
+            tasks = await TaskService.GetTasksByUserAsync(userName);
+            StateHasChanged();
+        });
+    }
+
+    async Task ToggleCompletion(TaskItem task)
     {
         task.IsCompleted = !task.IsCompleted;
         await TaskService.UpdateTaskAsync(task);
-        tasks = await TaskService.GetTasksAsync();
+        tasks = await TaskService.GetTasksByUserAsync(userName);
     }
 
-    private async Task DeleteTask(int id)
+    async Task DeleteTask(int id)
     {
         await TaskService.DeleteTaskAsync(id);
-        tasks = await TaskService.GetTasksAsync();
+        tasks = await TaskService.GetTasksByUserAsync(userName);
     }
 }

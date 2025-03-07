@@ -9,20 +9,47 @@
     <h3 class="text-center mb-4">➕ Dodaj nowe zadanie</h3>
 
     <div class="input-group">
-        <input @bind="newTask.Title" class="form-control" placeholder="Wpisz nazwę zadania..." />
+        <input @bind="newTaskTitle" class="form-control" placeholder="Wpisz nazwę zadania..." />
         <button class="btn btn-success" @onclick="AddTask">✔️ Dodaj</button>
     </div>
 
 </div>
 
 @code {
-    private TaskItem newTask = new();
+    List<TaskItem> tasks = new List<TaskItem>();
+    private string newTaskTitle;
+    private string userName;
 
-    private async Task AddTask()
+    [Parameter]
+    public EventCallback OnTaskAdded { get; set; } 
+
+    protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrWhiteSpace(newTask.Title))
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
         {
-            await TaskService.AddTaskAsync(newTask);
+            userName = user.Identity.Name;
         }
     }
+
+
+     TaskItem objTaskResult = new TaskItem();
+
+    private async Task AddTask()
+     {
+        var newTask = new TaskItem
+            {
+                Title = newTaskTitle,
+                IsCompleted = false,
+                UserName = userName,
+                DueDate = DateTime.Now.AddDays(7)
+            };
+
+        await TaskService.AddTaskAsync(newTask);
+        Console.WriteLine($"Zadanie '{newTask.Title}' dodane!");
+        await Task.Delay(100);
+        await OnTaskAdded.InvokeAsync();
+     }
 }

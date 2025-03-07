@@ -15,16 +15,19 @@ namespace BlazorTaskManager.Models
             _context = context;
         }
 
-        public async Task<List<TaskItem>> GetTasksAsync()
+        public async Task<List<TaskItem>> GetTasksByUserAsync(string userName)
         {
-            return await _context.Tasks.ToListAsync();
+            return await _context.Tasks
+                .Where(t => t.UserName == userName)
+                .ToListAsync();
         }
 
-        public async Task AddTaskAsync(TaskItem task)
+        public async Task AddTaskAsync(TaskItem objTask)
         {
-            _context.Tasks.Add(task);
+            await _context.Tasks.AddAsync(objTask);
             await _context.SaveChangesAsync();
         }
+
 
         public async Task UpdateTaskAsync(TaskItem task)
         {
