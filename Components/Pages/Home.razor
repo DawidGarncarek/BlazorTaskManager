@@ -1,86 +1,11 @@
 ﻿@page "/"
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject TaskService TaskService
-@using BlazorTaskManager.Data
-@using BlazorTaskManager.Models;
-@using BlazorTaskManager.Models.Tasks;
 
 <AuthorizeView>
     <Authorized>
-        <div class="container">
-            <h3 class="text-center mb-4">📋 Lista zadań</h3>
-
-            <div class="mb-3">
-                <TaskForm OnTaskAdded="RefreshTaskList" />
-            </div>
-
-            <table class="table table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Opis</th>
-                        <th class="text-center">Ukończone</th>
-                        <th class="text-center">Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var task in tasks)
-                    {
-                        <tr>
-                            <td>@task.Title</td>
-                            <td class="text-center">
-                                <input type="checkbox" checked="@task.IsCompleted" class="form-check-input"
-                                       @onchange="() => ToggleCompletion(task)" />
-                            </td>
-                            <td class="text-center">
-                                <button @onclick="() => DeleteTask(task.Id)" class="btn btn-sm btn-danger">❌ Usuń</button>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+        <TaskForm />
     </Authorized>
     <NotAuthorized>
         <p class="text-center text-danger">Musisz być zalogowany, aby zobaczyć listę zadań.</p>
     </NotAuthorized>
 </AuthorizeView>
-
-@code {
-    List<TaskItem> tasks = new List<TaskItem>();
-    private string userName = ""; 
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
-        {
-            userName = user.Identity.Name;
-            await RefreshTaskList();
-        }
-    }
-
-    private async Task RefreshTaskList()
-    {
-        Console.WriteLine($"Odświeżam listę zadań dla: {userName}");
-        await InvokeAsync(async () =>
-        {
-            tasks = await TaskService.GetTasksByUserAsync(userName);
-            StateHasChanged();
-        });
-    }
-
-    async Task ToggleCompletion(TaskItem task)
-    {
-        task.IsCompleted = !task.IsCompleted;
-        await TaskService.UpdateTaskAsync(task);
-        tasks = await TaskService.GetTasksByUserAsync(userName);
-    }
-
-    async Task DeleteTask(int id)
-    {
-        await TaskService.DeleteTaskAsync(id);
-        tasks = await TaskService.GetTasksByUserAsync(userName);
-    }
-}

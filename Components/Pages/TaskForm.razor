@@ -1,4 +1,4 @@
-﻿@page "/addtask"
+﻿@page "/tasks"
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject TaskService TaskService
 @using BlazorTaskManager.Data
@@ -6,22 +6,43 @@
 @using BlazorTaskManager.Models.Tasks;
 
 <div class="container">
-    <h3 class="text-center mb-4">➕ Dodaj nowe zadanie</h3>
+    <h3 class="text-center mb-4">Lista zadań</h3>
 
-    <div class="input-group">
+    <div class="input-group mb-3">
         <input @bind="newTaskTitle" class="form-control" placeholder="Wpisz nazwę zadania..." />
-        <button class="btn btn-success" @onclick="AddTask">✔️ Dodaj</button>
+        <button class="btn btn-success" @onclick="AddTask">Dodaj</button>
     </div>
 
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Opis</th>
+                <th class="text-center">Ukończone</th>
+                <th class="text-center">Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in tasks)
+            {
+                <tr>
+                    <td>@task.Title</td>
+                    <td class="text-center">
+                        <input type="checkbox" checked="@task.IsCompleted" class="form-check-input"
+                               @onchange="() => ToggleCompletion(task)" />
+                    </td>
+                    <td class="text-center">
+                        <button @onclick="() => DeleteTask(task.Id)" class="btn btn-sm btn-danger">Usuń</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 
 @code {
-    List<TaskItem> tasks = new List<TaskItem>();
+    private List<TaskItem> tasks = new();
     private string newTaskTitle;
     private string userName;
-
-    [Parameter]
-    public EventCallback OnTaskAdded { get; set; } 
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,25 +52,44 @@
         if (user.Identity.IsAuthenticated)
         {
             userName = user.Identity.Name;
+            await LoadTasks();
         }
     }
 
-
-     TaskItem objTaskResult = new TaskItem();
+    private async Task LoadTasks()
+    {
+        tasks = await TaskService.GetTasksByUserAsync(userName);
+        StateHasChanged();
+    }
 
     private async Task AddTask()
-     {
+    {
+        if (string.IsNullOrWhiteSpace(newTaskTitle)) return;
+
         var newTask = new TaskItem
             {
                 Title = newTaskTitle,
+                Description = "sss",
                 IsCompleted = false,
                 UserName = userName,
                 DueDate = DateTime.Now.AddDays(7)
             };
 
         await TaskService.AddTaskAsync(newTask);
-        Console.WriteLine($"Zadanie '{newTask.Title}' dodane!");
-        await Task.Delay(100);
-        await OnTaskAdded.InvokeAsync();
-     }
+        newTaskTitle = "";
+        await LoadTasks(); 
+    }
+
+    private async Task ToggleCompletion(TaskItem task)
+    {
+        task.IsCompleted = !task.IsCompleted;
+        await TaskService.UpdateTaskAsync(task);
+        await LoadTasks(); 
+    }
+
+    private async Task DeleteTask(int id)
+    {
+        await TaskService.DeleteTaskAsync(id);
+        await LoadTasks(); 
+    }
 }
