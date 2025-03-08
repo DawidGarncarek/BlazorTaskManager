@@ -51,6 +51,20 @@ namespace BlazorTaskManager.Models
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddSampleTaskAsync()
+        {
+            var sampleTask = new TaskItem
+            {
+                Title = "Przykładowe zadanie",
+                IsCompleted = false,
+                UserName = "TestUser",
+                DueDate = DateTime.Now.AddDays(7)
+            };
+
+            _context.Tasks.Add(sampleTask);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }
 

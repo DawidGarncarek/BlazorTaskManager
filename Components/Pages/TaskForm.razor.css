@@ -1,0 +1,74 @@
+﻿/* Kontener */
+.container {
+    background: #1a1a1a;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+    max-width: 700px;
+    margin: 50px auto;
+    color: white;
+}
+
+/* Nagłówek */
+h3 {
+    text-align: center;
+    font-weight: bold;
+    color: #ff3333;
+}
+
+/* Pole do wpisywania */
+.input-group input {
+    background: #222;
+    border: 2px solid #ff3333;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+    .input-group input::placeholder {
+        color: #ff9999;
+    }
+
+/* Przycisk "Dodaj" */
+.btn-success {
+    background-color: #ff3333 !important;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+    .btn-success:hover {
+        background-color: #cc0000 !important;
+    }
+
+/* Styl tabeli */
+.table {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #222;
+}
+
+/* Nagłówki tabeli */
+.table-dark {
+    background-color: #b30000 !important;
+    color: white;
+}
+
+/* Checkbox */
+.form-check-input {
+    transform: scale(1.2);
+    cursor: pointer;
+    accent-color: #ff3333;
+}
+
+/* Przycisk "Usuń" */
+.btn-danger {
+    background-color: #b30000 !important;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+    .btn-danger:hover {
+        background-color: #ff3333 !important;
+    }

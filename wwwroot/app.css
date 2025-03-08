@@ -1,23 +1,43 @@
 body {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #1a1a1a, #3a0000);
+    color: white;
     font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
+/* Kontener dla ca³ej aplikacji */
 .container {
     max-width: 800px;
     margin: 40px auto;
-    background: white;
+    background: #222;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 15px rgba(255, 0, 0, 0.4);
 }
 
+/* Nag³ówki */
 h3 {
-    color: #007bff;
+    color: #ff3333;
+    font-weight: bold;
 }
 
-.table th, .table td {
-    vertical-align: middle;
+/* Styl tabeli */
+.table {
+    background: #1a1a1a;
+    color: white;
+}
+
+    .table th, .table td {
+        background: #b30000 !important;
+        color: white;
+        vertical-align: middle;
+    }
+
+.btn-danger {
+    background-color: #b30000;
+    border-radius: 8px;
+    transition: 0.3s;
 }
 
 .btn-primary {
@@ -30,9 +50,124 @@ h3 {
     }
 
 .btn-danger:hover {
-    background-color: #c82333;
+    background-color: #ff3333;
 }
 
 .input-group {
     margin-top: 10px;
+}
+
+.form-check-input {
+    transform: scale(1.2);
+    cursor: pointer;
+    accent-color: #ff3333;
+}
+
+.btn-success {
+    background-color: #ff3333 !important;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+    .btn-success:hover {
+        background-color: #cc0000 !important;
+    }
+
+/* Styl nowoczesnego paska nawigacyjnego */
+.navbar {
+    background: linear-gradient(45deg, #3a0000, #b30000);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(255, 0, 0, 0.5);
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    z-index: 1000;
+}
+
+/* Styl dla logotypu */
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+    .navbar-brand:hover {
+        opacity: 0.8;
+    }
+
+/* Kontener dla linków */
+.navbar-links {
+    margin-top:15px;
+    display: flex;
+    gap: 15px;
+}
+
+/* Styl linków */
+.navbar a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+    .navbar a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+.navbar .nav-link.active {
+    background-color: #ff3333;
+    border-radius: 10px;
+}
+
+/* Logout button */
+.logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+    .logout-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+/* Styl dla g³ównej zawartoœci */
+.content-wrapper {
+    padding-top: 80px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Styl dla treœci */
+.content {
+    margin-top:70px;
+    background: #222;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 800px;
+}
+
+.text-danger {
+    color: #ff4b4b;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.2rem;
 }
