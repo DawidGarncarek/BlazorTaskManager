@@ -68,6 +68,6 @@ Utwórz bazę danych i wykonaj migracje:
 Aplikacja powinna być dostępna pod adresem:
 https://localhost:5001
 
-## 📝 Autorzy i kontakt
-- 👨‍💻 Stworzone przez: Dawid
-- 📧 E-mail: d_garncarek@wp.pl
+## Autorzy i kontakt
+- Stworzone przez: Dawid
+- E-mail: d_garncarek@wp.pl
